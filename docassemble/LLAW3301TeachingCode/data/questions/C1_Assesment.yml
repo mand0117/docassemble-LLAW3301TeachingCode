@@ -1,0 +1,109 @@
+---
+objects:
+  - endpoint: DADict
+---
+# This is the welcome screen
+mandatory: True
+question: Welcome!
+subquestion: |
+  Welcome to our service where we provide an application which is designed to assist in the completion of creating a Federal Court Form 1 Document. We hope you enjoy using it!
+
+  ***Disclaimer:***  
+  **The form created must be checked by a lawyer and this app does not provide any legal advice.** 
+buttons:
+ - I do not want to continue: exit
+   url: http://www.courts.sa.gov.au/
+ - I want to continue: continue
+---
+mandatory: true
+code: | 
+ if KBMcourt == 'Federal Court'or KBMcourt == 'Federal Circuit Court':
+   endpoint['eligible']
+ else:
+   endpoint['ineligible']
+---
+question: Which Court is the file to be completed?
+fields:
+  - Court: KBMcourt
+    choices:
+      - Supreme Court
+      - District Court
+      - Magistrates Court
+      - Federal Court
+      - Federal Circuit Court
+---
+# This is the ineligible endpoint
+event: endpoint['ineligible']
+question: Eligibility Requirements not met
+subquestion:
+  It seems you do not meet our eligibility requirements. This app will only prepare forms for the Federal Court or the Federal Circuit Court. 
+buttons:
+  - Exit: exit
+  - Continue: continue
+---
+# This is the eligible endpoint.
+event: endpoint['eligible']
+question: You are eligible
+subquestion: |
+  Congratulations, you meet our
+  eligibility requirements.
+buttons:
+  - Exit: exit
+  - Continue: continue
+---
+#Form 1 Questions
+mandatory: True
+question: Hello world!
+subquestion: |
+  ### Your Information
+  
+  Thanks for completing the questions required for the Form 1
+  We have collected this data from you
+  
+  Information|Your Input
+  -----------|----------
+  The State            | ${ KBMstate }
+  The Division         | ${ KBMdivision }
+  Name of Applicant    | ${ KBMfirstname } ${ KBMlastname }
+  Name of Respondent   | ${ KBMrespondentname } ${ KBMrespondentlastname }
+  The Date             | ${ some_date }
+buttons:
+  - I'm done: exit
+  - Do it again!: restart
+---
+question: Please select the District of registry. 
+fields:
+  - State: KBMstate
+    choices:
+      - New South Wales
+      - Victoria
+      - Queensland
+      - Western Australia
+      - South Australia
+      - Tasmania
+---
+question: Please select the Division. 
+fields:
+  - State: KBMdivision
+    choices:
+      - Corporations
+      - Criminal
+      - Employment
+      - General
+---
+question: What is the Applicants name?
+fields:
+  - First Name: KBMfirstname
+  - Last Name: KBMlastname
+---
+question: What is the Respondents name?
+fields:
+  - First Name: KBMrespondentname
+  - Last Name: KBMrespondentlastname
+---
+question: |
+  Give me a date.
+fields:
+  - Date: some_date
+    datatype: date
+---
